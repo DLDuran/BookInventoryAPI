@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="BookInventory.Api/BookInventory.Api.csproj" />
+  <Project Path="BookInventory.Application/BookInventory.Application.csproj" />
+  <Project Path="BookInventory.Domain/BookInventory.Domain.csproj" />
+  <Project Path="BookInventory.Infrastructure/BookInventory.Infrastructure.csproj" />
+</Solution>
