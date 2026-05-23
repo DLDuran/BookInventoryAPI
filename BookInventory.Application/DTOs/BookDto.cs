@@ -10,4 +10,6 @@ public class BookDto
     public int TotalPages { get; set; }
     public int PagesRead { get; set; }
     public string? CoverImagePath { get; set; }
+    public DateTime? ReadingStaredDate { get; set; }
+    public DateTime? DateFinished { get; set; }
 }

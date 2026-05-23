@@ -65,7 +65,7 @@ namespace BookInventory.Application.Services
 
         public async Task<bool> PatchBookAsync(int id, UpdateBookRequest dto, long userId)
         {
-            var book = await _bookRepository.GetByIdAsync(id,userId);
+            var book = await _bookRepository.GetByIdAsync(id, userId);
 
             if (book == null)
                 throw new NotFoundException("Book not found.");
@@ -73,14 +73,30 @@ namespace BookInventory.Application.Services
             if (book.UserId != userId)
                 throw new UnauthorizedAccessException("You don't have permission to modify this book.");
 
-            if (dto.Title != null) book.Title = dto.Title;
-            if (dto.Author != null) book.Author = dto.Author;
-            if (dto.CoverImagePath != null) book.CoverImagePath = dto.CoverImagePath;
+            if (!string.IsNullOrWhiteSpace(dto.Title))
+                book.Title = dto.Title;
+
+            if (dto.Author != null)
+                book.Author = dto.Author;
+
+            if (dto.CoverImagePath != null)
+                book.CoverImagePath = dto.CoverImagePath;
 
             if (dto.Status.HasValue) book.Status = dto.Status.Value;
             if (dto.InterestLevel.HasValue) book.InterestLevel = dto.InterestLevel.Value;
             if (dto.TotalPages.HasValue) book.TotalPages = dto.TotalPages.Value;
             if (dto.PagesRead.HasValue) book.PagesRead = dto.PagesRead.Value;
+
+            if (dto.ReadingStaredDate.HasValue)
+                book.ReadingStartedDate = DateOnly.FromDateTime(dto.ReadingStaredDate.Value);
+            else
+                book.ReadingStartedDate = (dto.PagesRead > 0 ? DateOnly.FromDateTime(DateTime.UtcNow) : null);
+
+
+            if (book.PagesRead >= book.TotalPages && book.TotalPages > 0)
+            {
+                book.DateFinished = DateOnly.FromDateTime(DateTime.UtcNow); 
+            }
 
             if (book.PagesRead > book.TotalPages)
             {

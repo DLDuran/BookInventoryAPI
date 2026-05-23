@@ -8,5 +8,7 @@
         public int TotalPages { get; set; }
         public int InterestLevel { get; set; } = 1;
         public string? CoverImagePath { get; set; }
+        public DateTime? ReadingStaredDate { get; set; }
+        public DateTime? DateFinished { get; set; }
     }
 }
