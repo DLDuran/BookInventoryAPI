@@ -18,7 +18,7 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(connectionString));
 
-// Dependency Inversion: Map IAppDbContext to the concrete AppDbContext
+// DEPENDENCY INVERTION
 builder.Services.AddScoped<IAppDbContext>(provider =>
     provider.GetService<AppDbContext>()!);
 
@@ -57,7 +57,7 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddOpenApi();
 
-// Register Controller services
+// register controller services
 builder.Services.AddControllers();
 
 var app = builder.Build();
@@ -72,7 +72,7 @@ if (app.Environment.IsDevelopment())
 // 4. MIDDLEWARE PIPELINE
 app.UseHttpsRedirection();
 
-// IMPORTANT: Authentication must always come before Authorization
+// IMPORTANT: authentication must always come before Authorization
 app.UseAuthentication();
 app.UseAuthorization();
 

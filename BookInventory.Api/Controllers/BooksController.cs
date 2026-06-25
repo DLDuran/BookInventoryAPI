@@ -7,7 +7,7 @@ namespace BookInventory.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    [Authorize] // All endpoints require authentication by default
+    [Authorize] 
     public class BooksController : ApiControllerBase
     {
         private readonly IBookService _bookService;

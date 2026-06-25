@@ -9,7 +9,7 @@ namespace BookInventory.Infrastructure.Repositories
     {
         private readonly AppDbContext _context;
 
-        public virtual void GetInternalState() { } // Just structure
+        public virtual void GetInternalState() { } 
 
         public UserRepository(AppDbContext context)
         {

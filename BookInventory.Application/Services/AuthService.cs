@@ -23,9 +23,10 @@ public class AuthService : IAuthService
 
     public async Task<bool> RegisterAsync(RegisterRequest registerDto)
     {
-        // Check if user already exists
         if (await _context.Users.AnyAsync(u => u.Email == registerDto.Email))
+        {
             return false;
+        }
 
         var user = new User
         {
@@ -43,12 +44,13 @@ public class AuthService : IAuthService
         var user = await _context.Users.FirstOrDefaultAsync(u => u.Email == loginDto.Email);
 
         if (user == null || !PasswordHasher.VerifyPassword(loginDto.Password, user.PasswordHash))
+        {
             return null;
+        }
 
         var accessToken = _tokenService.GenerateAccessToken(user);
         var refreshToken = _tokenService.GenerateRefreshToken();
 
-        // Save the refresh token and its expiry in the database
         user.RefreshToken = refreshToken;
         user.RefreshTokenExpiryTime = DateTime.UtcNow.AddDays(
             double.Parse(_config["Jwt:RefreshTokenExpirationDays"] ?? "7"));
@@ -61,14 +63,17 @@ public class AuthService : IAuthService
     public async Task<AuthResponse> RefreshTokenAsync(TokenRequest tokenRequestDto)
     {
         var principal = _tokenService.GetPrincipalFromExpiredToken(tokenRequestDto.AccessToken);
-        if (principal == null) return null;
-
+        if (principal == null)
+        {
+            return null;
+        }
         var userIdString = principal.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
-        if (!long.TryParse(userIdString, out long userId)) return null;
-
+        if (!long.TryParse(userIdString, out long userId))
+        {
+            return null;
+        }
         var user = await _context.Users.FindAsync(userId);
 
-        // Security checks: user exists, token matches, and it is not expired
         if (user == null ||
                 user.RefreshToken != tokenRequestDto.RefreshToken ||
                 user.RefreshTokenExpiryTime <= DateTime.UtcNow)
@@ -79,7 +84,6 @@ public class AuthService : IAuthService
         var newAccessToken = _tokenService.GenerateAccessToken(user);
         var newRefreshToken = _tokenService.GenerateRefreshToken();
 
-        // Rotate the refresh token (Security best practice)
         user.RefreshToken = newRefreshToken;
         await _context.SaveChangesAsync();
 

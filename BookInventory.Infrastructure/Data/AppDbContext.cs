@@ -15,7 +15,7 @@ public class AppDbContext : DbContext, IAppDbContext
     {
         base.OnModelCreating(modelBuilder);
 
-        // Map DateOnly to PostgreSQL 'date' type
+        // map DateOnly to PostgreSQL 'date' type
         modelBuilder.Entity<Book>(entity => {
             entity.Property(b => b.CreatedAt).HasColumnType("date");
             entity.Property(b => b.ReadingStartedDate).HasColumnType("date");

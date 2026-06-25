@@ -21,16 +21,12 @@ namespace BookInventory.Domain.Entities
 
         public int TotalPages { get; set; }
         public int PagesRead { get; set; }
-
-        // PostgreSQL Date types
         public DateOnly? ReadingStartedDate { get; set; }
         public DateOnly? DateFinished { get; set; }
 
-        // Foreign Key changed from int to Guid to match the new User Id
         [Required]
         public long UserId { get; set; }
 
-        // Navigation property for the relationship with User
         [ForeignKey("UserId")]
         public User? User { get; set; }
     }

@@ -13,12 +13,8 @@ namespace BookInventory.Domain.Entities
 
         [Required]
         public string PasswordHash { get; set; } = string.Empty;
-
-        // Authentication Properties
         public string? RefreshToken { get; set; }
         public DateTime? RefreshTokenExpiryTime { get; set; }
-
-        // Navigation: A user can have many books
         public ICollection<Book> Books { get; set; } = new List<Book>();
     }
 }

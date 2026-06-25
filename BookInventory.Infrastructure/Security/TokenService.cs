@@ -18,12 +18,12 @@ public class TokenService : ITokenService
             _configuration = configuration;
         }
 
-        // 1. Generates the main access token
+        
         public string GenerateAccessToken(User user)
         {
             var claims = new List<Claim>
         {
-            // IMPORTANT: Use the new Guid Id as NameIdentifier
+           
             new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
             new Claim(ClaimTypes.Name, user.Username),
             new Claim(ClaimTypes.Email, user.Email)
@@ -36,14 +36,13 @@ public class TokenService : ITokenService
                 issuer: _configuration["Jwt:Issuer"],
                 audience: _configuration["Jwt:Audience"],
                 claims: claims,
-                expires: DateTime.UtcNow.AddMinutes(15), // Short-lived token
+                expires: DateTime.UtcNow.AddMinutes(15), 
                 signingCredentials: creds
             );
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        // 2. Generates a long random string for the refresh token
         public string GenerateRefreshToken()
         {
             var randomNumber = new byte[64];
@@ -52,7 +51,6 @@ public class TokenService : ITokenService
             return Convert.ToBase64String(randomNumber);
         }
 
-        // 3. Extracts user info from an expired token to allow refreshing
         public ClaimsPrincipal? GetPrincipalFromExpiredToken(string token)
         {
             var tokenValidationParameters = new TokenValidationParameters
@@ -61,7 +59,7 @@ public class TokenService : ITokenService
                 ValidateIssuer = false,
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!)),
-                ValidateLifetime = false // Critical: we want to read it even if expired
+                ValidateLifetime = false 
             };
 
             var tokenHandler = new JwtSecurityTokenHandler();

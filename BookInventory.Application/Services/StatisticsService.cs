@@ -23,11 +23,13 @@ namespace BookInventory.Application.Services
             var books = await _bookRepository.GetByUserIdAsync(userId);
 
             if (books == null || !books.Any())
+            {
                 return new UserStatsDto();
+            }
 
             var stats = new UserStatsDto
             {
-                TotalBooks = books.Count(), 
+                TotalBooks = books.Count(),
                 BooksCompleted = books.Count(b => b.Status == ReadingStatus.Finished),
                 BooksInProgress = books.Count(b => b.Status == ReadingStatus.Reading),
                 TotalPagesRead = books.Sum(b => b.PagesRead),
@@ -35,7 +37,7 @@ namespace BookInventory.Application.Services
                     b.TotalPages > 0 ? (double)b.PagesRead / b.TotalPages * 100 : 0), 2)
             };
 
-            return stats; 
+            return stats;
         }
     }
 }

@@ -20,7 +20,11 @@ public class ApiControllerBase : ControllerBase, IActionFilter
     {
         if (CurrentUserId == 0)
         {
-            context.Result = new UnauthorizedObjectResult(new { message = "System cannot identify the user." });
+            context.Result = new UnauthorizedObjectResult(
+                new
+                {
+                    message = "System cannot identify the user."
+                });
         }
     }
 

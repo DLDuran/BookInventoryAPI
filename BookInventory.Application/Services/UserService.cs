@@ -17,13 +17,16 @@ namespace BookInventory.Application.Services
         {
             var user = await _userRepository.GetByIdAsync(userId);
 
-            if (user == null) return null;
+            if (user == null)
+            {
+                return null;
+            }
 
             return new UserProfileDto
             {
                 Id = user.Id,
                 Email = user.Email,
-                Username = user.Username 
+                Username = user.Username
             };
         }
     }

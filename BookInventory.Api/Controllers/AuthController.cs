@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using BookInventory.Application.DTOs;
 using BookInventory.Infrastructure.Data;
-using BookInventory.Application.Interfaces.Services; 
+using BookInventory.Application.Interfaces.Services;
 
 namespace BookInventory.Api.Controllers
 {
@@ -9,14 +9,11 @@ namespace BookInventory.Api.Controllers
     [ApiController]
     public class AuthController : ControllerBase
     {
-        private readonly AppDbContext _context;
-        private readonly ITokenService _tokenService;
+
         private readonly IAuthService _authService;
 
-        public AuthController(AppDbContext context, ITokenService tokenService, IAuthService authService)
+        public AuthController(IAuthService authService)
         {
-            _context = context;
-            _tokenService = tokenService;
             _authService = authService;
         }
 
@@ -26,8 +23,9 @@ namespace BookInventory.Api.Controllers
             var response = await _authService.LoginAsync(request);
 
             if (response == null)
+            {
                 return NotFound("User not found with the assigned credentials");
-
+            }
             return Ok(response);
         }
 
@@ -37,8 +35,9 @@ namespace BookInventory.Api.Controllers
             var response = await _authService.RegisterAsync(request);
 
             if (!response)
+            {
                 return BadRequest("Failed to register user");
-
+            }
             return Ok(new { message = "Registration successful" });
         }
 
@@ -47,9 +46,10 @@ namespace BookInventory.Api.Controllers
         {
             var response = await _authService.RefreshTokenAsync(request);
 
-            if (response==null)
+            if (response == null)
+            {
                 return BadRequest("Failed to refresh");
-
+            }
             return Ok(response);
         }
     }
